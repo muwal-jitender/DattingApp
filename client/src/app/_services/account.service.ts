@@ -12,7 +12,7 @@ export class AccountService {
   // It is kind of like a buffer object, store the value inside here
   // Anytime a subscriber subscribe to it, it will emit the last value inside it
   // 1 means we will going to store only one user, it like size of a bugger
-  private currentUserSource = new ReplaySubject<User | null>(1);
+  private currentUserSource = new ReplaySubject<User>(1);
   // By convention we add $ sign to observables
   currentUser$ = this.currentUserSource.asObservable();
 
