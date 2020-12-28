@@ -75,6 +75,10 @@ namespace API.Controllers
         [HttpPut("set-main-photo/{photoId}")]
         public async Task<ActionResult> SetMainPhoto(int photoId)
         {
+            // Entity Framework will track any changes made to entities it has in memory.
+            // When we get the Photo entity and change a property this is tracked.
+            // When we then call save changes, this updates the DB with any changes.
+            // We do not have to call the Update method.
             var user = await _userRespository.GetUserByUsernameAsync(Username);
             var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
             if (photo.IsMain) return BadRequest("This is already your main photo");
