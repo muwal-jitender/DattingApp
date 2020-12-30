@@ -14,11 +14,11 @@
                 </div>
                 <div>
                     <strong>Last active:</strong>
-                    <p> {{member.lasActive}} </p>
+                    <p> {{member.lasActive | timeago}} </p>
                 </div>
                 <div>
                     <strong>Member since:</strong>
-                    <p> {{member.created}} </p>
+                    <p> {{member.created | date: 'dd MMM YYYY'}} </p>
                 </div>
             </div>
             <div class="card-footer">
@@ -44,7 +44,8 @@
             </tab>
 
             <tab heading="Photos">
-                <ngx-gallery [options]="galleryOptions" [images]="galleryImages" class="ngx-gallery" style="display: inline-block; margin-bottom: 20px; "></ngx-gallery>
+                <ngx-gallery [options]="galleryOptions" [images]="galleryImages" class="ngx-gallery"
+                    style="display: inline-block; margin-bottom: 20px; "></ngx-gallery>
 
             </tab>
 
