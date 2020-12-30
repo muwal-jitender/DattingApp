@@ -26,12 +26,13 @@ export class ErrorInterceptor implements HttpInterceptor {
                 for (const key in err.error.errors) {
                   if (err.error.errors[key]) {
                     modelStateErrors.push(err.error.errors[key]);
-                    console.log(`Key= ${key}`);
                   }
                 }
                 throw modelStateErrors.flat();
-              } else {
+              } else if (typeof (err.error) === 'object') {
                 this.toastr.error(err.statusText, err.status);
+              } else {
+                this.toastr.error(err.error, err.status);
               }
               break;
             case 401:
