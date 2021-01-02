@@ -2,6 +2,7 @@ using API.Data;
 using API.Helpers;
 using API.Interfaces;
 using API.Services;
+using API.SignalR;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,7 +14,7 @@ namespace API.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
         {
-
+            services.AddSingleton<PresenceTracker>();
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
             // When we register a type as Scoped, one instance is available throughout the application per request.
             // When a new request comes in, the new instance is created.
