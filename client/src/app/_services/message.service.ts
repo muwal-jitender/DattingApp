@@ -50,7 +50,7 @@ export class MessageService {
             }
           });
           this.messageThreadSource.next([...messages]);
-        });
+        }); 
       }
     });
   }
