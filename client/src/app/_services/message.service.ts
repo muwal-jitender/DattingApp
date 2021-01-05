@@ -8,6 +8,7 @@ import { User } from '../_models/user';
 import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Group } from '../_models/group';
+import { BusyService } from './busy.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,9 +20,10 @@ export class MessageService {
   private messageThreadSource = new BehaviorSubject<Message[]>([]);
   messageThread$ = this.messageThreadSource.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private busyService: BusyService) { }
 
   createHubConnection = (user: User, otherUsername: string) => {
+    this.busyService.busy();
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(`${this.hubUrl}message?user=${otherUsername}`, {
         accessTokenFactory: () => user.token
@@ -29,7 +31,9 @@ export class MessageService {
       .withAutomaticReconnect()
       .build();
 
-    this.hubConnection.start().catch(err => console.log(err));
+    this.hubConnection.start()
+      .catch(err => console.log(err))
+      .finally(() => this.busyService.idle());
 
     this.hubConnection.on('ReceiveMessageThread', message => {
       this.messageThreadSource.next(message);
@@ -50,13 +54,14 @@ export class MessageService {
             }
           });
           this.messageThreadSource.next([...messages]);
-        }); 
+        });
       }
     });
   }
 
   stopHubConnection = () => {
     if (this.hubConnection) {
+      this.messageThreadSource.next([]);
       this.hubConnection.stop();
     }
   }
